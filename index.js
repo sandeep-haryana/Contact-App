@@ -4,7 +4,6 @@ const app = express();
 
 //database connection
 import { connectDB } from "./configue/database.js";
-connectDB();
 
 //.env
 const PORT = process.env.PORT || 5000;
@@ -14,13 +13,22 @@ app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static("public"));
 
-//routes
-app.use("/", ContactRoutes);
+//Connect to database before handling routes
+let dbConnected = false;
+
+const initializeDB = async () => {
+  dbConnected = await connectDB();
+};
+
+initializeDB();
 
 //Health check endpoint for Vercel
 app.get("/health", (req, res) => {
-  res.status(200).json({ status: "OK" });
+  res.status(200).json({ status: "OK", dbConnected });
 });
+
+//routes
+app.use("/", ContactRoutes);
 
 //new line
 if (process.env.NODE_ENV !== "production") {

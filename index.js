@@ -2,25 +2,25 @@ import express from "express";
 import ContactRoutes from "./routes/contact.routes.js";
 const app = express();
 
-//databse connection
+//database connection
 import { connectDB } from "./configue/database.js";
 connectDB();
 
 //.env
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5000;
 
 //middleware
-app.set("view engine", "ejs"); //uses to write the html and js together
-app.use(express.urlencoded({ extended: false })); //uses so that the server understand the user data
-app.use(express.static("public")); //uses so app can read the file in folder public
+app.set("view engine", "ejs");
+app.use(express.urlencoded({ extended: false }));
+app.use(express.static("public"));
 
 //routes
 app.use("/", ContactRoutes);
 
-// app.listen(PORT, () => {
-//   console.log(`Server is running on port: ${PORT}`);
-// });
-
+//Health check endpoint for Vercel
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "OK" });
+});
 
 //new line
 if (process.env.NODE_ENV !== "production") {

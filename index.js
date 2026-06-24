@@ -17,6 +17,16 @@ app.use(express.static("public")); //uses so app can read the file in folder pub
 //routes
 app.use("/", ContactRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port: ${PORT}`);
-});
+// app.listen(PORT, () => {
+//   console.log(`Server is running on port: ${PORT}`);
+// });
+
+
+//new line
+if (process.env.NODE_ENV !== "production") {
+  app.listen(PORT, () => {
+    console.log(`Server is running on port: ${PORT}`);
+  });
+}
+
+export default app;

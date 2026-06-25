@@ -4,8 +4,17 @@ import mongoose from "mongoose";
 import dotenv from "dotenv"
 dotenv.config()
 
-export const connectDB = () => {
-  mongoose.connect(process.env.MONGO_URL).then(() => {
-    console.log("Databse Connected Successfully");
-  });
+export const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URL, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 5000,
+    });
+    console.log("Database Connected Successfully");
+    return true;
+  } catch (err) {
+    console.error("Database Connection Error:", err.message);
+    return false;
+  }
 };
